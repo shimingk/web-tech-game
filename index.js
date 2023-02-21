@@ -12,17 +12,18 @@ let spr;
 //   spr.velocity.y = (mouseY - spr.position.y) * 0.2;
 //   drawSprites();
 // };
-
+let x;
 // Window dimensions.
 const windowWidth = 1512;
 const windowHeight = 834;
 
 // Rows and columns.
-const rows = 1;
-const cols = 10 ;
+const rows = 5;
+const cols = 5;
 
-// Boolean for alive or not.
+// Booleans for alive or not and evil paddle direction.
 let alive = true;
+let changeDir = false;
 
 // Dimensions for bricks
 const brickWidth =  Math.round(windowWidth / cols - 5);
@@ -34,6 +35,13 @@ let score = 0;
 
 // PADDLE  
 let paddle = {
+  x: windowWidth / 2 - 25,
+  y: windowHeight - 25,
+  width: 250,
+  height: 25
+};
+
+let comp = {
   x: windowWidth / 2 - 25,
   y: windowHeight - 25,
   width: 250,
@@ -54,7 +62,8 @@ window.setup = () => {
   createCanvas(windowWidth, windowHeight);
   spr = createSprite(width / 2, height, 250, 50);
   spr.shapeColor = color(255);
-  generateBricks();  
+  generateBricks();
+  x = 15;
 };
 
 // Generate bricks.
@@ -90,8 +99,8 @@ window.keyPressed = () => {
     paddle.x = windowWidth / 2 - 50,
     ball.x = paddle.x - 25,
     ball.y = paddle.y - 50,
-    ball.speedX = 6;
-    ball.speedY = 6;
+    ball.speedX = 5;
+    ball.speedY = 5;
     bricks.splice(0, bricks.length); // clean array of bricks    
     score = 0;
     generateBricks();
@@ -104,9 +113,25 @@ window.drawPaddle = () => {
   rect(mouseX - 125, paddle.y, paddle.width, paddle.height);
 };
 
+// Draw the comp evil paddle
+window.drawComp = () => {
+  fill('magenta');
+  rect(x, comp.y - 500, comp.width, comp.height);
+  if (x > windowWidth) {
+    changeDir = true;
+  } else if (x <= 0) {
+    changeDir = false;
+  }
+  if (x >= 0 && changeDir == false){
+		  x = x + 5;
+  } else if(changeDir == true){
+		  x = x - 5;
+  }
+};
+
 // Draw the ball.
 window.drawBall = () => {
-  fill('white');
+  fill('yellow');
   circle(ball.x, ball.y, ball.diameter); 
   // Collision on top of the screen
   if(ball.y - ball.diameter / 2 <= 0) {
@@ -135,6 +160,13 @@ window.drawBall = () => {
     }    
   }
 
+  // Evil comp paddle collisions
+    // comp collision for first half.
+  // if(ball.y >= comp.y) {
+  //   ball.speedY = -ball.speedY;
+  //   ball.speedX = -ball.speedX;
+  // }
+
   // Brick collision.
   bricks.forEach((brick, index) => {
     if(ball.y - ball.diameter / 2 <= brick.y + 50 + brick.height && ball.x > brick.x && ball.x <= brick.x + brick.width) {
@@ -154,7 +186,7 @@ window.drawBall = () => {
 window.displayScore = () => {
   fill("beige");
   textAlign(CENTER);
-  textSize(20);
+  textSize(25);
   text(`Score: ${score}`, windowWidth / 2, 22);
 };
 
@@ -176,7 +208,7 @@ window.endScreen = (message) => {
 // Animate and draw everything to the screen.
 window.draw = () => {
   background("black");
-  spr.velocity.x = (mouseX - spr.position.x) * 0.2;
+  spr.velocity.x = (mouseX - spr.position.x) * 0.25;
   // If the player broke all the bricks, they win.
   if(bricks.length === 0) {
     endScreen("You Win!");
@@ -189,6 +221,7 @@ window.draw = () => {
   if(alive) {
     drawBricks();
     drawPaddle();
+    drawComp();
     drawBall();
     displayScore();
     drawSprites();
