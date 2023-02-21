@@ -1,0 +1,31 @@
+{
+  "name": "web-tech-game",
+  "version": "1.0.0",
+  "description": "MP3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "web-dev-server --node-resolve --open --watch",
+    "build": "rollup --config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shimingk/web-tech-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shimingk/web-tech-game/issues"
+  },
+  "homepage": "https://github.com/shimingk/web-tech-game#readme",
+  "dependencies": {
+    "p5": "^1.5.0",
+    "p5.play": "^3.5.21"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@web/dev-server": "^0.1.35",
+    "rollup": "^2.79.1",
+    "rollup-plugin-copy": "^3.4.0"
+  }
+}
